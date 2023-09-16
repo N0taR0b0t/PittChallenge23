@@ -43,6 +43,20 @@ if __name__ == "__main__":
     med = sys.argv[3]
 
     for i in range(len(ing)):
+
+        # Check for notable ingredients
+        if ing[i] in ["DIPHENHYDRAMINE","DIMENHYDRINATE","CHLORPHENIRAMINE","DOXYLAMINE"]:
+            print(str(ing[i]) + " is a first generation antihystamine")
+        if ing[i] in ["IBUPROPHEN", "ASPRIN", "NAPROXEN"]:
+            print(str(ing[i]) + " is an NSAID")
+        if ing[i] in ["ALCOHOL", "ETHANOL"]: # which are we using?
+            print("This product contains alcohol")
+        if ing[i] in ["CAFFEINE"]:
+            print("This product contains caffeine")
+        if ing[i] in ["MILK", "LACTOSE", "WHEY", "CURDS"[: # not comprehensive]
+            print("This product contains lactose")
+
+
         if isAllergen(ing[i]):
             print(str(ing[i]) + " is an allergen")
 
