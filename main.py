@@ -12,6 +12,7 @@ Takes list arguments ingedients, allergies, medication
 
 import json, os, sys, subprocess, csv, requests
 import pprint
+import urllib.parse
 
 
 def isAllergen(food):
@@ -23,20 +24,50 @@ def isAllergen(food):
                 return True
         return False
 
-def hasDrugInteraction(food):
+def hasDrugInteractionNIH(food):
     # returns T/F
-    uri="https://rxnav.nlm.nih.gov/REST/interaction/interaction.json" # for indivudual drug
-#    uri="https://rxnav.nlm.nih.gov/REST/interaction/list.json" # list of drugs
-    params = {'format': '.json', 'rxcui': 341248}
-#    params = {'format': '.json', 'rxcui': [341248, 152923]}
+    uri = "https://rxnav.nlm.nih.gov/REST/interaction/list.json"
+    # Create a dictionary with the request parameters
+#    params = {'format': '.json', 'rxcuis': [152923,656659],'sources':"DrugBank"} # yes interacts
+    #params = {'format': '.json', 'rxcuis': [12255944,7739116,6365314,6364742,12251372]}
+#    params = {'format': '.json', 'rxcuis': [6397347,10298100],'sources':"DrugBank"}
+    try:
+        r = requests.get(uri, params)
+        r.raise_for_status()  # Raise an exception for HTTP errors
+        print("Response Status Code:", r.status_code)
+        pprint.pprint(r.json())
+        # You can return True/False based on the API response here
+        # if there is a drug interaction return true else return false
+    except requests.exceptions.RequestException as e:
+        print("Request Exception:", e)
+        # Handle the error or return False
 
-    r = requests.get(uri, params)
-    print(r.status_code)
-    pprint.pprint(r.json())
-    #return False
-    return True
+# Call the function with a sample 'food' value
+#hasDrugInteraction("sample_food")
 
-hasDrugInteraction("fobbers")
+
+def hasDrugInteractionDB(food):
+    uri = "https://api.drugbank.com/v1/ddi?"
+    # Create a dictionary with the request parameters
+#    params = {'ndc': "0054-0020,0456-2005"}
+    params = {'q': "lithium,lexapro", "Authorization": } # need API key
+
+    try:
+        r = requests.get(uri, params)
+        r.raise_for_status()  # Raise an exception for HTTP errors
+        print("Response Status Code:", r.status_code)
+        pprint.pprint(r.json())
+        # You can return True/False based on the API response here
+        # if there is a drug interaction return true else return false
+    except requests.exceptions.RequestException as e:
+        print("Request Exception:", e)
+        # Handle the error or return False
+
+# Call the function with a sample 'food' value
+hasDrugInteractionDB("sample_food")
+
+
+
 
 ing = []
 
@@ -70,7 +101,7 @@ if __name__ == "__main__":
             print(str(ing[i]) + " is an allergen")
 
         for m in range(len(med)):
-            if hasDrugInteraction(ing[i]):
+            if hasDrugInteraction(ing[i]): # depricated
                 print(str(ing[i]) + "has drug interaction with" + str(med[m]))
                 # add chatGPT interaction + drugs.com
 
