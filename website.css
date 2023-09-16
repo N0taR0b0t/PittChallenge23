@@ -1,0 +1,109 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+a {
+    text-decoration:none;
+}
+
+#login-btn a {
+    color:whitesmoke;
+}
+
+.navbar{
+    position:absolute;
+    top:0;
+    left:0;
+    display:flex;
+    flex:1;
+    width: 100%;
+    justify-content: space-between;
+    padding: 20px;
+    background-color:whitesmoke;
+    color: black;
+    font-size: 20px;
+}
+
+.nav-links{
+    display:flex; 
+    align-items: center;
+    list-style:none;
+}
+/* this code will allow the items to be next to each other */
+
+.nav-links li{
+    margin:0 30px;
+}
+
+header {
+    width: 100vw;
+    height: 90vh;
+    background-image: url(/pitt-challenge/PittChallenge23/food.jpg);
+    background-size: cover;
+    display:flex;
+    align-items: flex-end; 
+    justify-content: flex-start; /*can change this later*/
+}
+.header-content {
+    margin-bottom: 180px;
+    color:whitesmoke;
+    text-align:center;
+}
+
+.header-content h2{
+    font-size: 45px;
+}
+
+.header-content >h1, h2{
+    margin-left: 60px;
+}
+
+.line{
+    width: 190px;
+    height: 4px;
+    background: #fc036b;
+    margin: 10px auto; 
+    border-radius: 5px;
+}
+
+.header-content h1 {
+    font-size: 60px;
+    margin-top: 50px;
+    margin-bottom: 30px;
+}
+
+/*for the special links - sign up/login, read more, search, etc */
+.button {
+    cursor: pointer;
+    padding: 8px 15px;
+    background-color: #fc036b;
+    border-radius: 20px;
+    color: whitesmoke;
+}
+
+
+.button:active {
+    background-color:coral;
+    transition: 0.3 all ease;
+    animation-delay: 3ms;
+}
+
+.about{
+    display:flex;
+    align-items: center;
+}
+.about-topics {
+    width: 95%;
+    margin: 80px;
+ /*CHANGE THE FLEXWRAP WHEN SMALLER SCREENS!!*/
+}
+
+.about-topics h2{
+    text-align: center;
+}
+
+.about p {
+    text-align:center;
+}
