@@ -24,33 +24,70 @@ def isAllergen(food):
                 return True
         return False
 
-def hasDrugInteractionNIH(food):
+def hasDrugInteractionNIH(food, medlist):
     # returns T/F
     uri = "https://rxnav.nlm.nih.gov/REST/interaction/list.json"
     # Create a dictionary with the request parameters
-#    params = {'format': '.json', 'rxcuis': [152923,656659],'sources':"DrugBank"} # yes interacts
+    params = {'format': '.json', 'rxcuis': medlist} # yes interacts
     #params = {'format': '.json', 'rxcuis': [12255944,7739116,6365314,6364742,12251372]}
 #    params = {'format': '.json', 'rxcuis': [6397347,10298100],'sources':"DrugBank"}
     try:
         r = requests.get(uri, params)
         r.raise_for_status()  # Raise an exception for HTTP errors
         print("Response Status Code:", r.status_code)
-        pprint.pprint(r.json())
+#        pprint.pprint(r.json())
         # You can return True/False based on the API response here
         # if there is a drug interaction return true else return false
+#        delete
+        jNIH = r.json()
+        removeList = ['nlmDisclaimer', 'sourceDisclaimer']
+        for i in range(len(removeList)):
+            if removeList[i] in jNIH:
+                del jNIH[removeList[i]]
+        if jNIH == {}:
+            return False
+        return jNIH
     except requests.exceptions.RequestException as e:
         print("Request Exception:", e)
         # Handle the error or return False
+        return False
 
 # Call the function with a sample 'food' value
 #hasDrugInteraction("sample_food")
 
 
-def hasDrugInteractionDB(food):
+def get_rxnorm_code(medication_name):
+    # Base URL for the RxNav API
+    base_url = "https://rxnav.nlm.nih.gov/REST/rxcui.json"
+    # Parameters for the API request
+    params = {
+        "name": medication_name
+    }
+
+    try:
+        # Make the GET request to the RxNav API
+        response = requests.get(base_url, params=params)
+
+        # Check if the request was successful (HTTP status code 200)
+        if response.status_code == 200:
+            # Parse the JSON response
+            data = response.json()
+            # Check if a match was found
+            if "idGroup" in data:
+                rxcui = data["idGroup"]["rxnormId"][0]
+                return rxcui
+            else:
+                return "Medication not found in RxNorm"
+        else:
+            return f"Error: {response.status_code} - {response.text}"
+    except Exception as e:
+        return f"An error occurred: {str(e)}"
+
+def hasDrugInteractionDB(food): # dep due to lack of API key
     uri = "https://api.drugbank.com/v1/ddi?"
     # Create a dictionary with the request parameters
 #    params = {'ndc': "0054-0020,0456-2005"}
-    params = {'q': "lithium,lexapro", "Authorization": } # need API key
+    params = {'q': "lithium,lexapro", "Authorization": ""} # need API key
 
     try:
         r = requests.get(uri, params)
@@ -64,7 +101,7 @@ def hasDrugInteractionDB(food):
         # Handle the error or return False
 
 # Call the function with a sample 'food' value
-hasDrugInteractionDB("sample_food")
+#hasDrugInteractionDB("sample_food")
 
 
 
@@ -76,11 +113,26 @@ with open(sys.argv[1]) as in_file:
             line = line.strip()
             ing.append(line)
 
+med = []
+
+if os.path.exists(sys.argv[3]):
+    with open(sys.argv[3]) as in_file:
+        for line in in_file:
+            line = line.strip()
+            if line.isdigit():
+                med.append(int(line))
+            else:
+                med.append(get_rxnorm_code(line))
+else:
+    print("No such file '{}'".format(sys.argv[3]), file=sys.stderr)
+    med = ""
+
 if __name__ == "__main__":
 #    ing = sys.argv[1]
     print(ing)
     allergy = sys.argv[2]
-    med = sys.argv[3]
+#    med = list(sys.argv[3]) # less than 4 (4+1=5 API limit)
+    print(med)
 
     for i in range(len(ing)):
 
@@ -100,8 +152,16 @@ if __name__ == "__main__":
         if isAllergen(ing[i]):
             print(str(ing[i]) + " is an allergen")
 
-        for m in range(len(med)):
-            if hasDrugInteraction(ing[i]): # depricated
-                print(str(ing[i]) + "has drug interaction with" + str(med[m]))
+#        for m in range(len(med)):
+#            if hasDrugInteraction(ing[i],med): # depricated
+#                print(str(ing[i]) + "has drug interaction with" + str(med[m]))
                 # add chatGPT interaction + drugs.com
 
+            nihResp = hasDrugInteractionNIH(ing[i],med)
+            if nihResp != False:
+                interaction_pairs = nihResp['fullInteractionTypeGroup'][0]['fullInteractionType'][0]['interactionPair']
+                descriptions = [pair['description'] for pair in interaction_pairs]
+                names = [  (pair['interactionConcept'][0]['minConceptItem']['name'], pair['interactionConcept'][1]['minConceptItem']['name'])
+                     for pair in interaction_pairs    ][0]
+                pprint.pprint(descriptions)
+                pprint.pprint(names)
