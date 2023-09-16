@@ -17,12 +17,19 @@ import urllib.parse
 
 def isAllergen(food):
     # check food allergen list, retuns T/F
-    with open('allergens.txt') as in_file:
-        for line in in_file:
-            line = line.strip()
-            if line == food:
-                return True
-        return False
+#    with open('allergens.txt') as in_file:
+#        for line in in_file:
+#            line = line.strip()
+#            if line == food:
+#                return True
+#        return False
+    with open('COMPARE.csv') as csvfile:
+        spamreader = csv.reader(csvfile)
+        for row in enumerate(spamreader):
+            if row[1][1].strip().upper() == food:
+                for i in allergy:
+                    if row[1][3] == i:
+                        return True
 
 def hasDrugInteractionNIH(food, medlist):
     # returns T/F
@@ -104,17 +111,19 @@ def hasDrugInteractionDB(food): # dep due to lack of API key
 #hasDrugInteractionDB("sample_food")
 
 
-
-
 ing = []
-
 with open(sys.argv[1]) as in_file:
         for line in in_file:
             line = line.strip()
             ing.append(line)
 
-med = []
+allergy = []
+with open(sys.argv[2]) as in_file:
+        for line in in_file:
+            line = line.strip()
+            allergy.append(line)
 
+med = []
 if os.path.exists(sys.argv[3]):
     with open(sys.argv[3]) as in_file:
         for line in in_file:
@@ -130,7 +139,7 @@ else:
 if __name__ == "__main__":
 #    ing = sys.argv[1]
     print(ing)
-    allergy = sys.argv[2]
+#    allergy = sys.argv[2]
 #    med = list(sys.argv[3]) # less than 4 (4+1=5 API limit)
     print(med)
 
@@ -150,7 +159,7 @@ if __name__ == "__main__":
 
 
         if isAllergen(ing[i]):
-            print(str(ing[i]) + " is an allergen")
+            print("You are allergic to " + ing[i])
 
 #        for m in range(len(med)):
 #            if hasDrugInteraction(ing[i],med): # depricated
