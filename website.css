@@ -130,12 +130,9 @@ header {
 
 /*code for the SPECIAL section*/
 .pictures {
-    display:flex;
-    align-items: center;
-    justify-content:center;
     width: 80%;
     margin: 80px auto;
-    height: 120vh;
+    height: 90vh;
     border: 1px solid;
 }
 
@@ -147,27 +144,33 @@ header {
 
 
 .row { /*both*/
-    width: 70%;
-    margin: 10px;
+    display:flex;
+    align-items: center;
+    width: 100%;
+    justify-content: space-between;
+    height: 60%;
+    
 }
 
-#photography {
-    margin-left: 10px;
-    text-align:center;
+.row .col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
-
-#read-more {
-    margin-top: 40px;
-    text-align:center;
+.pictures .row {
+    margin-top: 5px;
+    height: 50vh;
+    margin: 5px;
 }
-
-
 
 #topic-1 h2, #topic-1 > .line {
     text-align:left;
 }
 
+#the-idea {
+    margin-left:10px;
+}
 
 #essential-questions , #essential-questions p{
     text-align:center;
@@ -180,10 +183,15 @@ h4 {
     text-align:center;
 }
 
-p , ol, ul li {
+p , ol li {
     color: grey;
     font-size: 24px;
     text-align:center;
     margin-top: 10px;
 }
 
+
+
+.pictures .button {
+    margin-top: 30px;
+}
