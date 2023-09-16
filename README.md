@@ -2,4 +2,4 @@
 University of Pittsburgh 2023 Challenge  
 
 
-Contributers: Julietta A , Hannah Kuklinski
+Contributers: Julietta Allart, Hannah Kuklinski, Matias Badino, Yu-hsuan Chao
