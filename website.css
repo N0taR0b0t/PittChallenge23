@@ -8,6 +8,7 @@ a {
     text-decoration:none;
 }
 
+/*changes the default link text from blue to white (we want the other links in the nav bar to stay that color, but unable to see this color on the button)*/
 #login-btn a {
     color:whitesmoke;
 }
@@ -37,6 +38,7 @@ a {
     margin:0 30px;
 }
 
+/*background image, display of headers/the button on top of the photo */
 header {
     width: 100vw;
     height: 90vh;
@@ -56,10 +58,12 @@ header {
     font-size: 45px;
 }
 
+/*moves both the headers left 60px so they aren't hanging off the ends*/
 .header-content >h1, h2{
     margin-left: 60px;
 }
 
+/*a cute little divider that helps keep things organized*/
 .line{
     width: 190px;
     height: 4px;
@@ -83,20 +87,36 @@ header {
     color: whitesmoke;
 }
 
-
+/*when the button is clicked*/
 .button:active {
     background-color:coral;
     transition: 0.3 all ease;
     animation-delay: 3ms;
 }
-
+/*about section is the one with three separate sections!*/
 .about{
     display:flex;
-    align-items: center;
+    flex-wrap:nowrap;
+    align-items: top;
+    justify-content: flex-start;
+    flex:1;
+    width: 90%;
+    text-align:top;
 }
+
+@media screen and (max-width: 700px) { 
+    .about {
+        flex-wrap: wrap;
+        overflow-x: hidden;
+    }
+}
+
+
+
 .about-topics {
-    width: 95%;
-    margin: 80px;
+    width: 100%;
+    margin: 40px;
+    height: 80%;
  /*CHANGE THE FLEXWRAP WHEN SMALLER SCREENS!!*/
 }
 
@@ -105,5 +125,73 @@ header {
 }
 
 .about p {
+    text-align:left;
+}
+
+/*code for the SPECIAL section*/
+.pictures {
+    width: 80%;
+    margin: 80px auto;
+    height: 90vh;
+    border: 1px solid;
+}
+
+.title {
     text-align:center;
+    font-size: 25px;
+    color:black;
+}
+
+
+.row { /*both*/
+    display:flex;
+    align-items: center;
+    width: 100%;
+    justify-content: space-between;
+    height: 60%;
+    
+}
+
+.row .col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.pictures .row {
+    margin-top: 5px;
+    height: 50vh;
+    margin: 5px;
+}
+
+#topic-1 h2, #topic-1 > .line {
+    text-align:left;
+}
+
+#the-idea {
+    margin-left:10px;
+}
+
+#essential-questions , #essential-questions p{
+    text-align:center;
+}
+
+h4 {
+    font-size: 3vmin;
+    color: black;
+    margin: 20px auto;
+    text-align:center;
+}
+
+p , ol li {
+    color: grey;
+    font-size: 24px;
+    text-align:center;
+    margin-top: 10px;
+}
+
+
+
+.pictures .button {
+    margin-top: 30px;
 }
