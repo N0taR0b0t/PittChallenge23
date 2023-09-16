@@ -10,7 +10,8 @@ Version: 0.0
 Takes list arguments ingedients, allergies, medication
 """
 
-import json, os, sys, subprocess
+import json, os, sys, subprocess, csv, requests
+import pprint
 
 
 def isAllergen(food):
@@ -24,9 +25,18 @@ def isAllergen(food):
 
 def hasDrugInteraction(food):
     # returns T/F
+    uri="https://rxnav.nlm.nih.gov/REST/interaction/interaction.json" # for indivudual drug
+#    uri="https://rxnav.nlm.nih.gov/REST/interaction/list.json" # list of drugs
+    params = {'format': '.json', 'rxcui': 341248}
+#    params = {'format': '.json', 'rxcui': [341248, 152923]}
 
-    return False
+    r = requests.get(uri, params)
+    print(r.status_code)
+    pprint.pprint(r.json())
+    #return False
     return True
+
+hasDrugInteraction("fobbers")
 
 ing = []
 
@@ -34,7 +44,6 @@ with open(sys.argv[1]) as in_file:
         for line in in_file:
             line = line.strip()
             ing.append(line)
-
 
 if __name__ == "__main__":
 #    ing = sys.argv[1]
@@ -46,14 +55,14 @@ if __name__ == "__main__":
 
         # Check for notable ingredients
         if ing[i] in ["DIPHENHYDRAMINE","DIMENHYDRINATE","CHLORPHENIRAMINE","DOXYLAMINE"]:
-            print(str(ing[i]) + " is a first generation antihystamine")
+            print(str(ing[i]) + " is a first generation antihistamine")
         if ing[i] in ["IBUPROPHEN", "ASPRIN", "NAPROXEN"]:
             print(str(ing[i]) + " is an NSAID")
         if ing[i] in ["ALCOHOL", "ETHANOL"]: # which are we using?
             print("This product contains alcohol")
         if ing[i] in ["CAFFEINE"]:
             print("This product contains caffeine")
-        if ing[i] in ["MILK", "LACTOSE", "WHEY", "CURDS"[: # not comprehensive]
+        if ing[i] in ["MILK", "LACTOSE", "WHEY", "CURDS"]: # not comprehensive
             print("This product contains lactose")
 
 
