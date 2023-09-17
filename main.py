@@ -38,11 +38,11 @@ def to_upper(oldList):
         newList.append(element.upper())
     return newList
 
-def hasDrugInteractionNIH(food, medlist):
+def hasDrugInteractionNIH(foodwithRX, medlist):
     # returns T/F
     uri = "https://rxnav.nlm.nih.gov/REST/interaction/list.json"
     # Create a dictionary with the request parameters
-    params = {'format': '.json', 'rxcuis': medlist} # yes interacts
+    params = {'format': '.json', 'rxcuis': foodwithRX + medlist} # yes interacts
     #params = {'format': '.json', 'rxcuis': [12255944,7739116,6365314,6364742,12251372]}
 #    params = {'format': '.json', 'rxcuis': [6397347,10298100],'sources':"DrugBank"}
     try:
@@ -91,7 +91,7 @@ def get_rxnorm_code(medication_name):
                 rxcui = data["idGroup"]["rxnormId"][0]
                 return rxcui
             else:
-                return "Medication not found in RxNorm"
+                return False # NOT FOUND
         else:
             return f"Error: {response.status_code} - {response.text}"
     except Exception as e:
@@ -188,6 +188,12 @@ else:
     for i in range(len(med)):
         if not med[i].isdigit():
             med[i] = get_rxnorm_code(med[i])
+
+foodmedRX = []
+for i in ing:
+    code = get_rxnorm_code(i)
+    if code != False:
+        foodmedRX.append(code)
 #    print("No such file '{}'".format(sys.argv[3]), file=sys.stderr)
 #    med = ""
 
@@ -221,7 +227,13 @@ if __name__ == "__main__":
 #                print(str(ing[i]) + "has drug interaction with" + str(med[m]))
                 # add chatGPT interaction + drugs.com
 
-            nihResp = hasDrugInteractionNIH(ing[i],med)
+            if len(foodmedRX) + len(med) <= 5:
+                nihResp = hasDrugInteractionNIH(foodmedRX,med)
+            else:
+                print("Cannot Process Request: too many medicinal ingredients (>5)")
+                break
+
+
             if nihResp != False:
 #                print(nihResp)
 #                interaction_pairs = nihResp['fullInteractionTypeGroup'][0]['fullInteractionType'][0]['interactionPair']
