@@ -21,7 +21,7 @@ a {
     flex:1;
     width: 100%;
     justify-content: space-between;
-    padding: 20px;
+    padding: 0px;
     background-color:whitesmoke;
     color: black;
     font-size: 20px;
@@ -35,21 +35,32 @@ a {
 /* this code will allow the items to be next to each other */
 
 .nav-links li{
-    margin:0 30px;
+    margin:0 70px;
 }
 
 /*background image, display of headers/the button on top of the photo */
 header {
+<<<<<<< HEAD
+    width: 60%;
+    height: 40vh;
+    background-image: url(/pitt-challenge/PittChallenge23/food.jpg);
+=======
     width: 100vw;
     height: 90vh;
     background-image: url(food.jpg);
+>>>>>>> cb8ac08358fa47d49c2f37da01093d9639aef186
     background-size: cover;
     display:flex;
     align-items: flex-end; 
     justify-content: flex-start; /*can change this later*/
+    margin: 0;
 }
+.header-img {
+    width:100%;
+}
+
 .header-content {
-    margin-bottom: 180px;
+    margin-bottom: 0px;
     color:whitesmoke;
     text-align:center;
 }
@@ -75,7 +86,7 @@ header {
 .header-content h1 {
     font-size: 60px;
     margin-top: 50px;
-    margin-bottom: 30px;
+    margin-bottom: 0px;
 }
 
 /*for the special links - sign up/login, read more, search, etc */
@@ -148,7 +159,7 @@ header {
     align-items: center;
     width: 100%;
     justify-content: space-between;
-    height: 60%;
+    height: 70%;
     
 }
 
