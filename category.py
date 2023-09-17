@@ -26,11 +26,10 @@ def search_substance(query, resultCount=0):
                     results.append(substance)
             else:
                 print(f"Skipping incomplete row: {row}")
-    
     if resultCount > 0:
         results = results[:resultCount]
-    
     for r in results:
-        print(r)
+      #  print(r)
+        return r
 
-search_substance("propan", 1) #Query STR and lines INT
+#search_substance("propan", 1) #Query STR and lines INT

@@ -1,10 +1,18 @@
-#!/opt/homebrew/bin/python3
+#!/usr/bin/env python
 
 import csv
 
 def extract_drug_info(search_term):
+    inputstr = search_term
+    if isinstance(search_term,list):
+        inputstr = ""
+        for i in search_term:
+            inputstr += str(i) + " "
+
+    print(inputstr)
+
     # Ensure the search term is case-insensitive by converting it to lowercase
-    search_term = search_term.lower()
+    search_term = inputstr.lower()
 
     # Set to ensure unique combinations of the desired fields
     unique_results = set()
@@ -34,5 +42,5 @@ def print_results(results):
         print(f"{result[0]},{result[1]},{result[2]},{result[3]},{result[4]}")
 
 # Test the function
-results = extract_drug_info("ZOFRAN")
-print_results(results)
+#results = extract_drug_info("ZOFRAN")
+#print_results(results)

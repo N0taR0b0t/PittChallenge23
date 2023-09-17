@@ -14,6 +14,8 @@ import json, os, sys, subprocess, csv, requests, magic
 import pprint
 import urllib.parse
 import OCR
+import category
+#import DrugNames
 #from medInteractGPT import check_substances_interactions
 
 
@@ -168,7 +170,7 @@ ing = []
 #with open(sys.argv[1]) as in_file:
 #ing = sys.argv[1].split("\n")
 
-print(os.path.exists(sys.argv[1]))
+#print(os.path.exists(sys.argv[1]))
 if os.path.isfile(sys.argv[1]) == True:
     if magic.from_file(sys.argv[1], mime=True).startswith("image"):
         ing = OCR.get_image_ingredients(sys.argv[1])
@@ -208,8 +210,14 @@ else:
             med[i] = get_rxnorm_code(med[i])
 
 # clear whitespace --- other sanitization
+simpIng = []
 for i in range(len(ing)):
     ing[i] = ing[i].strip()
+    if str(category.search_substance(ing[i],1)) == "None":
+        simpIng.append(ing[i])
+    else:
+        simpIng.append(category.search_substance(ing[i],1))
+
 for i in range(len(allergy)):
     allergy[i] = allergy[i].strip()
 for i in range(len(med)):
@@ -228,6 +236,7 @@ for i in ing:
 if __name__ == "__main__":
 #    ing = sys.argv[1]
     print("Complete list of ingredients passed: " + str(ing))
+    print("Genericicized list of ingredients passed: " + str(simpIng))
 #    allergy = sys.argv[2]
 #    med = list(sys.argv[3]) # less than 4 (4+1=5 API limit)
     print("There are " + str(len(med) + len(foodmedRX)) + " drugs or medically active ingredients")
