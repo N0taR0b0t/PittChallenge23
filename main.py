@@ -111,11 +111,13 @@ def hasDrugInteractionDB(food): # dep due to lack of API key
 #hasDrugInteractionDB("sample_food")
 
 
-ing = []
-with open(sys.argv[1]) as in_file:
-        for line in in_file:
-            line = line.strip()
-            ing.append(line)
+#ing = []
+#with open(sys.argv[1]) as in_file:
+#        for line in in_file:
+#            line = line.strip()
+#            ing.append(line)
+#ing = sys.argv[1].split("\n")
+ing = sys.argv[1].split(",")
 
 allergy = []
 with open(sys.argv[2]) as in_file:

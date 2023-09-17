@@ -40,9 +40,15 @@ a {
 
 /*background image, display of headers/the button on top of the photo */
 header {
+<<<<<<< HEAD
     width: 60%;
     height: 40vh;
     background-image: url(/pitt-challenge/PittChallenge23/food.jpg);
+=======
+    width: 100vw;
+    height: 90vh;
+    background-image: url(food.jpg);
+>>>>>>> cb8ac08358fa47d49c2f37da01093d9639aef186
     background-size: cover;
     display:flex;
     align-items: flex-end; 
