@@ -1,2 +1,7 @@
 google-cloud-vision
 Pillow
+requests
+python-magic
+pytesseract
+google-cloud-vision
+openai
