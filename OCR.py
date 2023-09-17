@@ -49,8 +49,6 @@ if __name__ == "__main__":
     ingredients = get_image_ingredients(input_image)
 
     if ingredients:
-        print("Extracted Ingredients from the Image:")
-        print("------------------------------------")
         print(ingredients)
     else:
         print("No ingredients list found.")
