@@ -10,7 +10,7 @@ Version: 0.4
 Takes list arguments ingedients, allergies, medication
 """
 
-import json, csv, requests
+import json, sys, csv, requests
 import pprint
 import urllib.parse
 import OCR
@@ -19,7 +19,6 @@ import category
 from medInteractGPT import check_substances_interactions
 from magic import from_file
 from os import path
-from sys import argv
 
 
 def isAllergen(food):
