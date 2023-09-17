@@ -101,7 +101,8 @@ def get_rxnorm_code(medication_name):
             else:
                 return False # NOT FOUND
         else:
-            return f"Error: {response.status_code} - {response.text}"
+            return False # NOT FOUND
+            #return f"Error: {response.status_code} - {response.text}"
     except Exception as e:
         return False
 #        return f"An error occurred: {str(e)}"
@@ -217,16 +218,16 @@ else:
             med[i] = get_rxnorm_code(med[i])
 
 # clear whitespace --- other sanitization
-#simpIng = []
-#stripping = []
-#for i in range(len(ing)):
-#    stripping.append(ing[i].strip())
-#    if str(category.search_substance(ing[i],1)) == "None":
-#        simpIng.append(ing[i])
-#    else:
-#        simpIng.append(category.search_substance(ing[i],1))
+simpIng = []
+stripping = []
+for i in ing:
+    stripping.append(i.strip())
+    if str(category.search_substance(i,1)) == "None":
+        simpIng.append(i)
+    else:
+        simpIng.append(category.search_substance(i,1))
 
-#ing = stripping
+ing = stripping
 
 for i in range(len(allergy)):
     allergy[i] = allergy[i].strip()
