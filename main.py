@@ -169,31 +169,34 @@ def get_pairs(data):
 #with open(sys.argv[1]) as in_file:
 #ing = sys.argv[1].split("\n")
 
+firstparam = sys.argv[1]
+secondparam = sys.argv[2]
+thirdparam = sys.argv[3]
+
 #print(os.path.exists(sys.argv[1]))
-if os.path.isfile(sys.argv[1]) == True:
-    if magic.from_file(sys.argv[1], mime=True).startswith("image"):
-        print(OCR.get_image_ingredients(sys.argv[1]))
-        ing = OCR.get_image_ingredients(sys.argv[1])
+if os.path.isfile(firstparam) == True:
+    if magic.from_file(firstparam, mime=True).startswith("image"):
+        ing = list(OCR.get_image_ingredients(firstparam))
     else:
         ing = []
-        with open(sys.argv[1]) as in_file:
+        with open(firstparam) as in_file:
             for line in in_file:
                    line = line.strip()
                    ing.append(line)
 else:
     ing = []
-    ing = to_upper(sys.argv[1].split(","))
+    ing = to_upper(firstparam.split(","))
 
-    print(ing)
+print(ing)
 
 allergy = []
-if os.path.isfile(sys.argv[2]) == True:
-    with open(sys.argv[2]) as in_file:
+if os.path.isfile(secondparam) == True:
+    with open(secondparam) as in_file:
             for line in in_file:
                 line = line.strip()
                 allergy.append(line)
 else:
-    allergy = to_upper(sys.argv[2].split(","))
+    allergy = to_upper(secondparam.split(","))
 
 
 
