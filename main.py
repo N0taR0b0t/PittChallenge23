@@ -211,12 +211,15 @@ else:
 
 # clear whitespace --- other sanitization
 simpIng = []
+stripping = []
 for i in range(len(ing)):
-    ing[i] = ing[i].strip()
+    stripping[i] = ing[i].strip()
     if str(category.search_substance(ing[i],1)) == "None":
         simpIng.append(ing[i])
     else:
         simpIng.append(category.search_substance(ing[i],1))
+
+ing = stripping
 
 for i in range(len(allergy)):
     allergy[i] = allergy[i].strip()
