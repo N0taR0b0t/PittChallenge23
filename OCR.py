@@ -39,16 +39,11 @@ def extract_ingredients_from_text(text):
 def get_image_ingredients(image_path):
     extracted_text = extract_text_from_image(image_path)
     ingredients = extract_ingredients_from_text(extracted_text)
-    
+    if not ingredients:
+        ingredients = "No ingredients list found."
     return ingredients
-
 
 if __name__ == "__main__":
     input_image = "images/8.png"
     
-    ingredients = get_image_ingredients(input_image)
-
-    if ingredients:
-        print(ingredients)
-    else:
-        print("No ingredients list found.")
+    return get_image_ingredients(input_image)
