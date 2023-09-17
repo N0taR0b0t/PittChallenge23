@@ -179,7 +179,6 @@ thirdparam = sys.argv[3]
 if path.isfile(firstparam) == True:
     if magic.from_file(firstparam, mime=True).startswith("image"):
         ing = OCR.get_image_ingredients(firstparam)
-        print(ing)
     else:
         ing = []
         with open(firstparam) as in_file:
@@ -189,8 +188,6 @@ if path.isfile(firstparam) == True:
 else:
     ing = []
     ing = to_upper(firstparam.split(","))
-
-print(ing)
 
 allergy = []
 if path.isfile(secondparam) == True:
@@ -282,7 +279,8 @@ if __name__ == "__main__":
         print()
         for x in pairs:
             print(x[0],x[1])
-            print(check_substances_interactions(x[0],x[1])) ###########333
+            gptres = check_substances_interactions(x[0],x[1])
+            print(gptres)
 
     print()
     for i in range(len(ing)):
