@@ -173,11 +173,13 @@ ing = []
 #print(os.path.exists(sys.argv[1]))
 if os.path.isfile(sys.argv[1]) == True:
     if magic.from_file(sys.argv[1], mime=True).startswith("image"):
+        print(OCR.get_image_ingredients(sys.argv[1]))
         ing = OCR.get_image_ingredients(sys.argv[1])
     else:
-        for line in in_file:
-            line = line.strip()
-            ing.append(line)
+        with open(sys.argv[1]) as in_file:
+            for line in in_file:
+                   line = line.strip()
+                   ing.append(line)
 else:
     ing = to_upper(sys.argv[1].split(","))
 
