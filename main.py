@@ -221,4 +221,4 @@ if __name__ == "__main__":
                 print()
                 for i in pairs:
                     print(i[0],i[1])
-                    print(check_substances_interaction(i[0],i[1]))
+                    print(check_substances_interactions(i[0],i[1]))
