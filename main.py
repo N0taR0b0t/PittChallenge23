@@ -10,13 +10,16 @@ Version: 0.4
 Takes list arguments ingedients, allergies, medication
 """
 
-import json, os, sys, subprocess, csv, requests, magic
+import json, csv, requests
 import pprint
 import urllib.parse
 import OCR
 import category
 #import DrugNames
 from medInteractGPT import check_substances_interactions
+from magic import from_file
+from os import path
+from sys import argv
 
 
 def isAllergen(food):
@@ -175,7 +178,7 @@ secondparam = sys.argv[2]
 thirdparam = sys.argv[3]
 
 #print(os.path.exists(sys.argv[1]))
-if os.path.isfile(firstparam) == True:
+if path.isfile(firstparam) == True:
     if magic.from_file(firstparam, mime=True).startswith("image"):
         ing = OCR.get_image_ingredients(firstparam)
         print(ing)
@@ -192,7 +195,7 @@ else:
 print(ing)
 
 allergy = []
-if os.path.isfile(secondparam) == True:
+if path.isfile(secondparam) == True:
     with open(secondparam) as in_file:
             for line in in_file:
                 line = line.strip()
@@ -203,7 +206,7 @@ else:
 
 
 med = []
-if os.path.exists(sys.argv[3]):
+if path.exists(sys.argv[3]):
     with open(sys.argv[3]) as in_file:
         for line in in_file:
             line = line.strip()
