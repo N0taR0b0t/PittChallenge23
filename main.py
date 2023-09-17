@@ -13,6 +13,7 @@ Takes list arguments ingedients, allergies, medication
 import json, os, sys, subprocess, csv, requests
 import pprint
 import urllib.parse
+from medInteractGPT.py import check_substances_interaction
 
 
 def isAllergen(food):
@@ -111,6 +112,44 @@ def hasDrugInteractionDB(food): # dep due to lack of API key
 #hasDrugInteractionDB("sample_food")
 
 
+#def descriptions(data):
+    #for group in data['fullInteractionTypeGroup']:
+    #    for entry in group['fullInteractionType']:
+    #        for interaction in entry['interactionPair']:
+    #            return interaction['description']
+
+def descriptions(data):
+    descriptions = []
+    for group in data['fullInteractionTypeGroup']:
+        for entry in group['fullInteractionType']:
+            for interaction in entry['interactionPair']:
+                descriptions.append(interaction['description'])
+    return '\n'.join(descriptions)
+
+def get_names_with_interaction_pairs(data):
+    names_with_pairs = set()
+    for group in data['fullInteractionTypeGroup']:
+        for entry in group['fullInteractionType']:
+            min_concepts = entry['minConcept']
+            if min_concepts:
+                for min_concept in min_concepts:
+                    names_with_pairs.add(min_concept['name'])
+    return names_with_pairs
+
+
+# Extract medication names for each interaction pair
+medication_pairs = []
+
+def get_pairs(data):
+    for group in data['fullInteractionTypeGroup']:
+        for interaction_type in group['fullInteractionType']:
+            for interaction_pair in interaction_type['interactionPair']:
+                concept1 = interaction_pair['interactionConcept'][0]['minConceptItem']['name']
+                concept2 = interaction_pair['interactionConcept'][1]['minConceptItem']['name']
+                medication_pairs.append((concept1, concept2))
+
+    return medication_pairs
+
 #ing = []
 #with open(sys.argv[1]) as in_file:
 #        for line in in_file:
@@ -170,9 +209,15 @@ if __name__ == "__main__":
 
             nihResp = hasDrugInteractionNIH(ing[i],med)
             if nihResp != False:
-                interaction_pairs = nihResp['fullInteractionTypeGroup'][0]['fullInteractionType'][0]['interactionPair']
-                descriptions = [pair['description'] for pair in interaction_pairs]
-                names = [  (pair['interactionConcept'][0]['minConceptItem']['name'], pair['interactionConcept'][1]['minConceptItem']['name'])
-                     for pair in interaction_pairs    ][0]
-                pprint.pprint(descriptions)
-                pprint.pprint(names)
+#                print(nihResp)
+#                interaction_pairs = nihResp['fullInteractionTypeGroup'][0]['fullInteractionType'][0]['interactionPair']
+#                print(interaction_pairs)
+#                descriptions = [pair['description'] for pair in interaction_pairs]
+#                names = [  (pair['interactionConcept'][0]['minConceptItem']['name'], pair['interactionConcept'][1]['minConceptItem']['name'])
+#                     for pair in interaction_pairs    ][0]
+                print(descriptions(nihResp))
+                print(get_names_with_interaction_pairs(nihResp))
+                pairs = get_pairs(nihResp)
+                for i in pairs:
+                    print(check_substances_interaction(i[0],i[1]))
+
