@@ -213,7 +213,7 @@ else:
 simpIng = []
 stripping = []
 for i in range(len(ing)):
-    stripping[i] = ing[i].strip()
+    stripping.append(ing[i].strip())
     if str(category.search_substance(ing[i],1)) == "None":
         simpIng.append(ing[i])
     else:
