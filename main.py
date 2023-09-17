@@ -166,7 +166,6 @@ def get_pairs(data):
 
     return medication_pairs
 
-ing = []
 #with open(sys.argv[1]) as in_file:
 #ing = sys.argv[1].split("\n")
 
@@ -176,11 +175,13 @@ if os.path.isfile(sys.argv[1]) == True:
         print(OCR.get_image_ingredients(sys.argv[1]))
         ing = OCR.get_image_ingredients(sys.argv[1])
     else:
+        ing = []
         with open(sys.argv[1]) as in_file:
             for line in in_file:
                    line = line.strip()
                    ing.append(line)
 else:
+    ing = []
     ing = to_upper(sys.argv[1].split(","))
 
     print(ing)
