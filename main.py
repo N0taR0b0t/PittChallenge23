@@ -176,7 +176,8 @@ thirdparam = sys.argv[3]
 #print(os.path.exists(sys.argv[1]))
 if os.path.isfile(firstparam) == True:
     if magic.from_file(firstparam, mime=True).startswith("image"):
-        ing = list(OCR.get_image_ingredients(firstparam))
+        ing = OCR.get_image_ingredients(firstparam)
+        print(ing)
     else:
         ing = []
         with open(firstparam) as in_file:
