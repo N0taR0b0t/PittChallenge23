@@ -227,8 +227,8 @@ if __name__ == "__main__":
 #                print(str(ing[i]) + "has drug interaction with" + str(med[m]))
                 # add chatGPT interaction + drugs.com
 
-            if len(foodmedRX) + len(med) <= 5:
-                nihResp = hasDrugInteractionNIH(foodmedRX,med)
+            if len(foodmedRX) + len(med) <= 5: # we are API limited to 5 interactions at a time being checked. Could check each permutation 
+                nihResp = hasDrugInteractionNIH(foodmedRX,med)  # more going on biologically means it's harder to know if an interaction will happen: more chaos (gene, env)
             else:
                 print("Cannot Process Request: too many medicinal ingredients (>5)")
                 break
