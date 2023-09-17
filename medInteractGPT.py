@@ -30,4 +30,4 @@ def check_substances_interactions(substance1, substance2):
     return response.choices[0].message['content']
 
 # Example of how to call the function
-result = check_substances_interactions("grapefruit", "simvastatin")
+#result = check_substances_interactions("grapefruit", "simvastatin")

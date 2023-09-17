@@ -218,6 +218,7 @@ if __name__ == "__main__":
                 print(descriptions(nihResp))
                 print(get_names_with_interaction_pairs(nihResp))
                 pairs = get_pairs(nihResp)
+                print()
                 for i in pairs:
+                    print(i[0],i[1])
                     print(check_substances_interaction(i[0],i[1]))
-
