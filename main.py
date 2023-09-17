@@ -13,7 +13,7 @@ Takes list arguments ingedients, allergies, medication
 import json, os, sys, subprocess, csv, requests
 import pprint
 import urllib.parse
-#from medInteractGPT import check_substances_interactions
+from medInteractGPT import check_substances_interactions
 
 
 def isAllergen(food):
