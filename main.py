@@ -218,16 +218,16 @@ else:
             med[i] = get_rxnorm_code(med[i])
 
 # clear whitespace --- other sanitization
-simpIng = []
-stripping = []
-for i in ing:
-    stripping.append(i.strip())
-    if str(category.search_substance(i,1)) == "None":
-        simpIng.append(i)
-    else:
-        simpIng.append(category.search_substance(i,1))
-
-ing = stripping
+#simpIng = []
+#stripping = []
+#for i in ing:
+#    stripping.append(i.strip())
+#    if str(category.search_substance(i,1)) == "None":
+#        simpIng.append(i)
+#    else:
+#        simpIng.append(category.search_substance(i,1))
+#
+#ing = stripping
 
 for i in range(len(allergy)):
     allergy[i] = allergy[i].strip()
