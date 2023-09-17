@@ -13,7 +13,7 @@ def check_substances_interactions(substance1, substance2):
     model="gpt-3.5-turbo"
     openai.api_key = apikey
     inter = substance1 + " or " + substance2
-    inter_message = ("Simply reply 'UNKNOWN' if either " + inter + " are not intended for human consumption. If both are designed to be ingested, provide a concise response, under 80 words, explaining problems that may arise if both are ingested together. Be formal, professional, cautious, and clear in the third person.")
+    inter_message = ("What possible interactions and problems may occur if some takes " + inter + "? Provide a concise response under 80 words. Be formal, professional, cautious, and clear in the third person.")
 
     messages = [{
         "role": "system",
