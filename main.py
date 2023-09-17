@@ -13,7 +13,7 @@ Takes list arguments ingedients, allergies, medication
 import json, os, sys, subprocess, csv, requests
 import pprint
 import urllib.parse
-from medInteractGPT import check_substances_interactions
+#from medInteractGPT import check_substances_interactions
 
 
 def isAllergen(food):
@@ -31,6 +31,12 @@ def isAllergen(food):
                 for i in allergy:
                     if row[1][3] == i:
                         return True
+
+def to_upper(oldList):
+    newList = []
+    for element in oldList:
+        newList.append(element.upper())
+    return newList
 
 def hasDrugInteractionNIH(food, medlist):
     # returns T/F
@@ -156,13 +162,17 @@ def get_pairs(data):
 #            line = line.strip()
 #            ing.append(line)
 #ing = sys.argv[1].split("\n")
-ing = sys.argv[1].split(",")
+ing = to_upper(sys.argv[1].split(","))
 
 allergy = []
-with open(sys.argv[2]) as in_file:
-        for line in in_file:
-            line = line.strip()
-            allergy.append(line)
+if os.path.isfile(sys.argv[2]) == True:
+    with open(sys.argv[2]) as in_file:
+            for line in in_file:
+                line = line.strip()
+                allergy.append(line)
+else:
+    allergy = to_upper(sys.argv[2].split(","))
+
 
 med = []
 if os.path.exists(sys.argv[3]):
@@ -174,8 +184,12 @@ if os.path.exists(sys.argv[3]):
             else:
                 med.append(get_rxnorm_code(line))
 else:
-    print("No such file '{}'".format(sys.argv[3]), file=sys.stderr)
-    med = ""
+    med = to_upper(sys.argv[3].split(","))
+    for i in range(len(med)):
+        if not med[i].isdigit():
+            med[i] = get_rxnorm_code(med[i])
+#    print("No such file '{}'".format(sys.argv[3]), file=sys.stderr)
+#    med = ""
 
 if __name__ == "__main__":
 #    ing = sys.argv[1]
