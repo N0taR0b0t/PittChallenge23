@@ -1,3 +1,4 @@
+#!/usr/bin/env python3.8
 import re
 from enum import Enum
 from google.cloud import vision
@@ -43,7 +44,6 @@ def get_image_ingredients(image_path):
         ingredients = "No ingredients list found."
     return ingredients
 
-if __name__ == "__main__":
-    input_image = "images/8.png"
-    
-    return get_image_ingredients(input_image)
+#if __name__ == "__main__":
+#    input_image = "images/8.png"
+#    return get_image_ingredients(input_image)

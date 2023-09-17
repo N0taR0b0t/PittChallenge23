@@ -4,16 +4,17 @@
 """
 Ingredients handler for Pitt Challange Hackathon
 Created September 15th, 2023
-Updated September 15th, 2023
-Version: 0.0
+Updated September 17th, 2023
+Version: 0.4
 
 Takes list arguments ingedients, allergies, medication
 """
 
-import json, os, sys, subprocess, csv, requests
+import json, os, sys, subprocess, csv, requests, magic
 import pprint
 import urllib.parse
-from medInteractGPT import check_substances_interactions
+import OCR
+#from medInteractGPT import check_substances_interactions
 
 
 def isAllergen(food):
@@ -41,14 +42,19 @@ def to_upper(oldList):
 def hasDrugInteractionNIH(foodwithRX, medlist):
     # returns T/F
     uri = "https://rxnav.nlm.nih.gov/REST/interaction/list.json"
+    if foodwithRX == '':
+        params = {'format': '.json', 'rxcuis': medlist} # yes interacts
+    else:
+        params = {'format': '.json', 'rxcuis': foodwithRX + medlist} # yes interacts
+
     # Create a dictionary with the request parameters
-    params = {'format': '.json', 'rxcuis': foodwithRX + medlist} # yes interacts
     #params = {'format': '.json', 'rxcuis': [12255944,7739116,6365314,6364742,12251372]}
 #    params = {'format': '.json', 'rxcuis': [6397347,10298100],'sources':"DrugBank"}
     try:
         r = requests.get(uri, params)
         r.raise_for_status()  # Raise an exception for HTTP errors
-        print("Response Status Code:", r.status_code)
+        if r.status_code != 200:
+            print("Response Status Code:", r.status_code)
 #        pprint.pprint(r.json())
         # You can return True/False based on the API response here
         # if there is a drug interaction return true else return false
@@ -95,7 +101,8 @@ def get_rxnorm_code(medication_name):
         else:
             return f"Error: {response.status_code} - {response.text}"
     except Exception as e:
-        return f"An error occurred: {str(e)}"
+        return False
+#        return f"An error occurred: {str(e)}"
 
 def hasDrugInteractionDB(food): # dep due to lack of API key
     uri = "https://api.drugbank.com/v1/ddi?"
@@ -106,7 +113,8 @@ def hasDrugInteractionDB(food): # dep due to lack of API key
     try:
         r = requests.get(uri, params)
         r.raise_for_status()  # Raise an exception for HTTP errors
-        print("Response Status Code:", r.status_code)
+        if r.status_code != 200:
+            print("Response Status Code:", r.status_code)
         pprint.pprint(r.json())
         # You can return True/False based on the API response here
         # if there is a drug interaction return true else return false
@@ -156,13 +164,22 @@ def get_pairs(data):
 
     return medication_pairs
 
-#ing = []
+ing = []
 #with open(sys.argv[1]) as in_file:
-#        for line in in_file:
-#            line = line.strip()
-#            ing.append(line)
 #ing = sys.argv[1].split("\n")
-ing = to_upper(sys.argv[1].split(","))
+
+print(os.path.exists(sys.argv[1]))
+if os.path.isfile(sys.argv[1]) == True:
+    if magic.from_file(sys.argv[1], mime=True).startswith("image"):
+        ing = OCR.get_image_ingredients(sys.argv[1])
+    else:
+        for line in in_file:
+            line = line.strip()
+            ing.append(line)
+else:
+    ing = to_upper(sys.argv[1].split(","))
+
+
 
 allergy = []
 if os.path.isfile(sys.argv[2]) == True:
@@ -172,6 +189,7 @@ if os.path.isfile(sys.argv[2]) == True:
                 allergy.append(line)
 else:
     allergy = to_upper(sys.argv[2].split(","))
+
 
 
 med = []
@@ -189,6 +207,16 @@ else:
         if not med[i].isdigit():
             med[i] = get_rxnorm_code(med[i])
 
+# clear whitespace --- other sanitization
+for i in range(len(ing)):
+    ing[i] = ing[i].strip()
+for i in range(len(allergy)):
+    allergy[i] = allergy[i].strip()
+for i in range(len(med)):
+    med[i] = med[i].strip()
+
+
+
 foodmedRX = []
 for i in ing:
     code = get_rxnorm_code(i)
@@ -199,13 +227,44 @@ for i in ing:
 
 if __name__ == "__main__":
 #    ing = sys.argv[1]
-    print(ing)
+    print("Complete list of ingredients passed: " + str(ing))
 #    allergy = sys.argv[2]
 #    med = list(sys.argv[3]) # less than 4 (4+1=5 API limit)
-    print(med)
+    print("There are " + str(len(med) + len(foodmedRX)) + " drugs or medically active ingredients")
 
+#    print(foodmedRX)
+#    print(med)
+    if len(foodmedRX) + len(med) <= 5: # we are API limited to 5 interactions at a time being checked. Could check each permutation 
+        nihResp = hasDrugInteractionNIH(foodmedRX,med)  # more going on biologically means it's harder to know if an interaction will happen: more chaos (gene, env)
+    else:
+        print("Cannot Process Request: too many medicinal ingredients (>5)")
+        print("Running missing some food-drug interactions")
+        items = int(5 - len(med))
+        if items <= 0:
+            print("Running missing some drug-drug interactions")
+            nihResp = hasDrugInteractionNIH('',med[0:4])
+        else:
+            nihResp = hasDrugInteractionNIH(foodmedRX[0:items],med[0:len(med)])
+
+    print()
+
+    if nihResp != False:
+#            print(nihResp)
+#            interaction_pairs = nihResp['fullInteractionTypeGroup'][0]['fullInteractionType'][0]['interactionPair']
+#            print(interaction_pairs)
+#            descriptions = [pair['description'] for pair in interaction_pairs]
+#            names = [  (pair['interactionConcept'][0]['minConceptItem']['name'], pair['interactionConcept'][1]['minConceptItem']['name'])
+#                 for pair in interaction_pairs    ][0]
+        print(descriptions(nihResp))
+#        print(get_names_with_interaction_pairs(nihResp))
+        pairs = get_pairs(nihResp)
+        print()
+        for x in pairs:
+            print(x[0],x[1])
+#            print(check_substances_interactions(x[0],x[1])) ###########333
+
+    print()
     for i in range(len(ing)):
-
         # Check for notable ingredients
         if ing[i] in ["DIPHENHYDRAMINE","DIMENHYDRINATE","CHLORPHENIRAMINE","DOXYLAMINE"]:
             print(str(ing[i]) + " is a first generation antihistamine")
@@ -227,24 +286,7 @@ if __name__ == "__main__":
 #                print(str(ing[i]) + "has drug interaction with" + str(med[m]))
                 # add chatGPT interaction + drugs.com
 
-            if len(foodmedRX) + len(med) <= 5: # we are API limited to 5 interactions at a time being checked. Could check each permutation 
-                nihResp = hasDrugInteractionNIH(foodmedRX,med)  # more going on biologically means it's harder to know if an interaction will happen: more chaos (gene, env)
-            else:
-                print("Cannot Process Request: too many medicinal ingredients (>5)")
-                break
 
 
-            if nihResp != False:
-#                print(nihResp)
-#                interaction_pairs = nihResp['fullInteractionTypeGroup'][0]['fullInteractionType'][0]['interactionPair']
-#                print(interaction_pairs)
-#                descriptions = [pair['description'] for pair in interaction_pairs]
-#                names = [  (pair['interactionConcept'][0]['minConceptItem']['name'], pair['interactionConcept'][1]['minConceptItem']['name'])
-#                     for pair in interaction_pairs    ][0]
-                print(descriptions(nihResp))
-                print(get_names_with_interaction_pairs(nihResp))
-                pairs = get_pairs(nihResp)
-                print()
-                for i in pairs:
-                    print(i[0],i[1])
-                    print(check_substances_interactions(i[0],i[1]))
+    print()
+    print("Done!")
