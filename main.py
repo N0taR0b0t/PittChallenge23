@@ -16,7 +16,7 @@ import urllib.parse
 import OCR
 import category
 #import DrugNames
-#from medInteractGPT import check_substances_interactions
+from medInteractGPT import check_substances_interactions
 
 
 def isAllergen(food):
@@ -270,7 +270,7 @@ if __name__ == "__main__":
         print()
         for x in pairs:
             print(x[0],x[1])
-#            print(check_substances_interactions(x[0],x[1])) ###########333
+            print(check_substances_interactions(x[0],x[1])) ###########333
 
     print()
     for i in range(len(ing)):
