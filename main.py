@@ -181,7 +181,7 @@ if os.path.isfile(sys.argv[1]) == True:
 else:
     ing = to_upper(sys.argv[1].split(","))
 
-
+    print(ing)
 
 allergy = []
 if os.path.isfile(sys.argv[2]) == True:
