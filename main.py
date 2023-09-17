@@ -246,7 +246,7 @@ for i in ing:
 if __name__ == "__main__":
 #    ing = sys.argv[1]
     print("Complete list of ingredients passed: " + str(ing))
-    print("Genericicized list of ingredients passed: " + str(simpIng))
+#    print("Genericicized list of ingredients passed: " + str(simpIng))
 #    allergy = sys.argv[2]
 #    med = list(sys.argv[3]) # less than 4 (4+1=5 API limit)
     print("There are " + str(len(med) + len(foodmedRX)) + " drugs or medically active ingredients")
